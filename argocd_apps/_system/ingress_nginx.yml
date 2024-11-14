@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  source:
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    chart: ingress-nginx
+    targetRevision: 4.11.3
+    helm:
+      # https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx?modal=values
+      # https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
+      valuesObject:
+        controller:
+          service:
+            type: LoadBalancer
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+          ingressClassResource:
+            default: true
+        defaultBackend:
+          enabled: true
+          image:
+            registry: docker.io
+            image: sikalabs/sikalabs-kubernetes-ingress-default-page
+            tag: latest
+            pullPolicy: Always
+          port: 8000
+          extraEnvs:
+            - name: CLUSTER
+              value: "o2-kafka-example"
+            - name: DOMAIN
+              value: "o2.sikademo.com"
