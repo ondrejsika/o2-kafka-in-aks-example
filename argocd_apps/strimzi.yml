@@ -24,3 +24,5 @@ spec:
       valuesObject:
         # https://artifacthub.io/packages/helm/strimzi-kafka-operator/strimzi-kafka-operator?modal=values
         watchAnyNamespace: true
+        dashboards:
+          enabled: true
