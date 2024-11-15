@@ -7,6 +7,12 @@ spec:
   kafka:
     version: 3.8.0
     replicas: 3
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: kafka-metrics
+          key: kafka-metrics-config.yml
     listeners:
       - name: plain
         port: 9092
@@ -44,6 +50,12 @@ spec:
           deleteClaim: false
   zookeeper:
     replicas: 3
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: kafka-metrics
+          key: zookeeper-metrics-config.yml
     storage:
       type: persistent-claim
       size: 1Gi
