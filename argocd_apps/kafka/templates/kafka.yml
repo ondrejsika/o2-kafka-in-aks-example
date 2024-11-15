@@ -18,14 +18,42 @@ spec:
         port: 9092
         type: internal
         tls: false
-      - name: extplain
-        port: 9094
-        type: nodeport
-        tls: false
-      - name: external
-        port: 9096
+      - name: aaa
+        port: 9093
         type: loadbalancer
         tls: false
+        configuration:
+          brokers:
+          - broker: 0
+            annotations:
+              foo: bar
+            loadBalancerIP: 138.91.50.167
+          - broker: 1
+            annotations:
+              foo: bar
+            loadBalancerIP: 137.116.240.32
+          - broker: 2
+            annotations:
+              foo: bar
+            loadBalancerIP: 168.61.83.70
+      - name: bbb
+        port: 9094
+        type: loadbalancer
+        tls: false
+        configuration:
+          brokers:
+          - broker: 0
+            annotations:
+              foo: bar
+            loadBalancerIP: 138.91.50.167
+          - broker: 1
+            annotations:
+              foo: bar
+            loadBalancerIP: 137.116.240.32
+          - broker: 2
+            annotations:
+              foo: bar
+            loadBalancerIP: 168.61.83.70
     config:
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3
@@ -37,7 +65,7 @@ spec:
       volumes:
         - id: 0
           type: persistent-claim
-          size: 1Gi
+          size: 2Gi
           deleteClaim: false
         - id: 1
           type: persistent-claim
